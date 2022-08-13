@@ -86,7 +86,6 @@ for term in q_l:
     query_list.append(res)
 
 
-count = len(query_list)
 counter = 0
 docs_to_retrieve = list()
 title_results = list()
