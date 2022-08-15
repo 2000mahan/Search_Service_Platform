@@ -87,7 +87,7 @@ for term in q_l:
 
 
 counter = 0
-docs_to_retrieve = list()
+docs_to_retrieve_from_positional_index_approach = list()
 title_results = list()
 dict1 = dict()
 dict1[len(query_list)] = query_list
@@ -190,7 +190,7 @@ while True:
             continue
         else:
             list_found_docs.append(doc_id)
-            docs_to_retrieve.append(doc_id)
+            docs_to_retrieve_from_positional_index_approach.append(doc_id)
             break
 
     doc_id = int(doc_id)
@@ -200,7 +200,7 @@ while True:
 # End
 
 
-#for i in docs_to_retrieve:
+#for i in docs_to_retrieve_from_positional_index_approach:
 #    print(doc_id_title[i])
 #    print(doc_id_url[i])
 
