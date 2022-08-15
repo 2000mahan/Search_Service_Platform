@@ -69,10 +69,23 @@ def query_parser(query):
         query_list.append(res)
     return query_list
 
+
 def tfidf(tf, df, N):
     if tf * df == 0:
         return 0.
     return (1 + np.log10(tf)) * np.log10(1. * N / df)
+
+
+def champion_lists_create(status, postings_list):
+    if status == False:
+        for term in positional_index:
+            postings_list[term] = list(positional_index[term].keys())
+        return postings_list
+    else:
+        with open("postings_lists.json", "r") as read_file:
+            postings_list = json.load(read_file)
+        return postings_list
+
 
 positional_index = dict()
 doc_id_title = dict()
@@ -215,4 +228,3 @@ while True:
 # for i in docs_to_retrieve_from_positional_index_approach:
 #    print(doc_id_title[i])
 #    print(doc_id_url[i])
-
