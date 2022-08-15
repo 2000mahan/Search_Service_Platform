@@ -228,3 +228,64 @@ while True:
 # for i in docs_to_retrieve_from_positional_index_approach:
 #    print(doc_id_title[i])
 #    print(doc_id_url[i])
+
+term_df = dict()
+for term in positional_index:
+    term_df[term] = len(positional_index[term].keys())
+
+postings_list = dict()
+# showing top 10 results
+k = 10
+# if champion_lists_status is set True we use Champion lists if is set to False we use the default Postings lists
+champion_lists_status = True
+postings_list = champion_lists_create(champion_lists_status, postings_list)
+N = len(doc_id_title.keys())
+
+lengths = list()
+try:
+    lengths = get_file("lengths.json")
+    lengths = load_dict(lengths)
+
+except Exception as e:
+    log_error("Main Program Error: {0}".format(e))
+
+scores = dict()
+for qt in query:
+    df = term_df[qt]
+    qt_tf = query.count(qt)
+    qt_weight = tfidf(df, qt_tf, N)
+    qt_postings = postings_list[qt]
+    for doc_id in qt_postings:
+        doc_id = int(doc_id)
+        if lengths[doc_id] == 0:
+            continue
+        doc_tf = term_frq_per_doc[doc_id][qt]
+        doc_weight = tfidf(df, doc_tf, N)
+        try:
+            scores[doc_id] += qt_weight * doc_weight
+        except KeyError:
+            scores[doc_id] = qt_weight * doc_weight
+
+for doc_id in scores:
+    scores[doc_id] /= lengths[doc_id]
+
+scores = dict(sorted(scores.items(), key=operator.itemgetter(1), reverse=True))
+docs_to_retrieve_from_tfidf_approach = list(scores.keys())[:k]
+
+for i in docs_to_retrieve_from_positional_index_approach:
+    if i in docs_to_retrieve_from_tfidf_approach:
+        i = int(i)
+        docs_to_retrieve_from_tfidf_approach.remove(i)
+
+for i in docs_to_retrieve_from_positional_index_approach:
+    print("Title: ")
+    print(doc_id_title[i])
+    print("URL: ")
+    print(doc_id_url[i])
+
+for i in docs_to_retrieve_from_tfidf_approach:
+    i = str(i)
+    print("Title: ")
+    print(doc_id_title[i])
+    print("URL: ")
+    print(doc_id_url[i])
