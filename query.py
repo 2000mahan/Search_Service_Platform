@@ -69,6 +69,10 @@ def query_parser(query):
         query_list.append(res)
     return query_list
 
+def tfidf(tf, df, N):
+    if tf * df == 0:
+        return 0.
+    return (1 + np.log10(tf)) * np.log10(1. * N / df)
 
 positional_index = dict()
 doc_id_title = dict()
