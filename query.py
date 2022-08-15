@@ -30,6 +30,51 @@ lemmatizer = Lemmatizer()
 def split(word):
     return [char for char in word]
 
+
+def query_parser(query):
+    for punctuation in punctuations:
+        query = query.replace(punctuation, " ")
+
+    for number_sign in english_numbers_signs:
+        query = query.replace(number_sign, '')
+
+    for num in numbers:
+        query = query.replace(num, '')
+
+    for esc in escape:
+        query = query.replace(esc, '')
+
+    for char_s in englsih_chars_s:
+        query = query.replace(char_s, '')
+
+    for char_c in englsih_chars_s:
+        query = query.replace(char_c, '')
+
+    query_list = query.split()
+
+    counter1 = 0
+    for words in stop_words:
+        for term in query_list:
+            counter1 = 0
+            if term == words:
+                counter1 = counter1 + 1
+            for i in range(counter1):
+                query_list.remove(words)
+
+    q_l = list(query_list)
+    query_list.clear()
+    for term in q_l:
+        res = stemmer.stem(term)
+        res = lemmatizer.lemmatize(res)
+        query_list.append(res)
+    return query_list
+
+
+positional_index = dict()
+doc_id_title = dict()
+doc_id_url = dict()
+term_frq_per_doc = dict()
+
 try:
     positional_index = get_file("positional_index.json")
     positional_index = load_dict(positional_index)
@@ -46,51 +91,14 @@ try:
 except Exception as e:
     log_error("Main Program Error: {0}".format(e))
 
-
 query = input("Search: ")
-
-for punctuation in punctuations:
-    query = query.replace(punctuation, " ")
-
-for number_sign in english_numbers_signs:
-    query = query.replace(number_sign, '')
-
-for num in numbers:
-    query = query.replace(num, '')
-
-for esc in escape:
-    query = query.replace(esc, '')
-
-for char_s in englsih_chars_s:
-    query = query.replace(char_s, '')
-
-for char_c in englsih_chars_s:
-    query = query.replace(char_c, '')
-
-query_list = query.split()
-
-counter1 = 0
-for words in stop_words:
-    for term in query_list:
-        counter1 = 0
-        if term == words:
-            counter1 = counter1 + 1
-        for i in range(counter1):
-            query_list.remove(words)
-
-q_l = list(query_list)
-query_list.clear()
-for term in q_l:
-    res = stemmer.stem(term)
-    res = lemmatizer.lemmatize(res)
-    query_list.append(res)
-
+query = query_parser(query)
 
 counter = 0
 docs_to_retrieve_from_positional_index_approach = list()
 title_results = list()
 dict1 = dict()
-dict1[len(query_list)] = query_list
+dict1[len(query)] = query
 
 # Start
 positional_postings_lists = list()
@@ -200,7 +208,6 @@ while True:
 # End
 
 
-#for i in docs_to_retrieve_from_positional_index_approach:
+# for i in docs_to_retrieve_from_positional_index_approach:
 #    print(doc_id_title[i])
 #    print(doc_id_url[i])
-
