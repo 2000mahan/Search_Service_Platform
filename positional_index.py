@@ -132,21 +132,22 @@ for term in positional_index.keys():
 
 try:
     bucket_name = "ir-data"
-    file1_name = "positional_index.json"
-    file1_content = json.dumps(positional_index).encode('utf-8')
-    file2_name = "doc_id_title.json"
-    file2_content = json.dumps(doc_id_title).encode('utf-8')
-    file3_name = "doc_id_url.json"
-    file3_content = json.dumps(doc_id_url).encode('utf-8')
-    file4_name = "term_frq.json"
-    file4_content = json.dumps(term_frq).encode('utf-8')
-    file5_name = "term_frq_per_doc.json"
-    file5_content = json.dumps(term_frq_per_doc).encode('utf-8')
-    create_file(bucket_name, file1_name, file1_content)
-    create_file(bucket_name, file2_name, file2_content)
-    create_file(bucket_name, file3_name, file3_content)
-    create_file(bucket_name, file4_name, file4_content)
-    create_file(bucket_name, file5_name, file5_content)
+    names = ["positional_index", "doc_id_title", "doc_id_url", "term_frq", "term_frq_per_doc"]
+    for i in names:
+        file_name = i + ".json"
+        if i == "positional_index":
+            file_content = json.dumps(positional_index).encode('utf-8')
+        elif i == "doc_id_title":
+            file_content = json.dumps(doc_id_title).encode('utf-8')
+        elif i == "doc_id_url":
+            file_content = json.dumps(doc_id_url).encode('utf-8')
+        elif i == "term_frq":
+            file_content = json.dumps(term_frq).encode('utf-8')
+        else:
+            file_content = json.dumps(term_frq_per_doc).encode('utf-8')
+
+        create_file(bucket_name, file_name, file_content)
+
 except Exception as e:
     log_error("Main Program Error: {0}".format(e))
 
