@@ -4,70 +4,7 @@ import json
 from ibm_cloud import *
 import numpy as np
 import operator
-
-punctuations = [':', '،', '.', ')', '(', '}', '{', '؟', '!', '-', '/', '؛', '#', '*', '\n', '\"',
-                ']', '[', '«', '»', '٪', '+', '٠', '\\', '\"', '_', '\'']
-
-english_numbers_signs = ['0', '1', '2', '3', '4',
-                         '5', '6', '7', '8', '9', '%', '@', '_', "\"", '$', '&', ',', '"', '>', '<', '|',
-                         '­', ';', 'é', '=', '+', '?']
-
-escape = ['\u200c', '\u200b', '\u200f']
-
-numbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']
-
-englsih_chars_s = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-                   'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-
-englsih_chars_c = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-                   'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-
-stop_words = stopwords_list()
-stemmer = Stemmer()
-lemmatizer = Lemmatizer()
-
-
-def split(word):
-    return [char for char in word]
-
-
-def query_parser(query):
-    for punctuation in punctuations:
-        query = query.replace(punctuation, " ")
-
-    for number_sign in english_numbers_signs:
-        query = query.replace(number_sign, '')
-
-    for num in numbers:
-        query = query.replace(num, '')
-
-    for esc in escape:
-        query = query.replace(esc, '')
-
-    for char_s in englsih_chars_s:
-        query = query.replace(char_s, '')
-
-    for char_c in englsih_chars_s:
-        query = query.replace(char_c, '')
-
-    query_list = query.split()
-
-    counter1 = 0
-    for words in stop_words:
-        for term in query_list:
-            counter1 = 0
-            if term == words:
-                counter1 = counter1 + 1
-            for i in range(counter1):
-                query_list.remove(words)
-
-    q_l = list(query_list)
-    query_list.clear()
-    for term in q_l:
-        res = stemmer.stem(term)
-        res = lemmatizer.lemmatize(res)
-        query_list.append(res)
-    return query_list
+from preprocess import *
 
 
 def tfidf(tf, df, N):
@@ -77,7 +14,7 @@ def tfidf(tf, df, N):
 
 
 def champion_lists_create(status, postings_list):
-    if status == False:
+    if not status:
         for term in positional_index:
             postings_list[term] = list(positional_index[term].keys())
         return postings_list
@@ -109,7 +46,12 @@ except Exception as e:
     log_error("Main Program Error: {0}".format(e))
 
 query = input("Search: ")
-query = query_parser(query)
+parser(query)
+query_list = query.split()
+remove_stop_words(query_list)
+q_l = list(query_list)
+query_list.clear()
+query_list = stemmer_and_lemmatizer(q_l)
 
 counter = 0
 docs_to_retrieve_from_positional_index_approach = list()
@@ -237,7 +179,7 @@ postings_list = dict()
 # showing top 10 results
 k = 10
 # if champion_lists_status is set True we use Champion lists if is set to False we use the default Postings lists
-champion_lists_status = True
+champion_lists_status = False
 postings_list = champion_lists_create(champion_lists_status, postings_list)
 N = len(doc_id_title.keys())
 

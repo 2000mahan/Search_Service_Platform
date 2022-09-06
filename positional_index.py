@@ -3,6 +3,7 @@ from hazm import *
 import json
 from ibm_cloud import *
 import os
+from preprocess import *
 
 try:
     data = get_file("data.json")
@@ -16,27 +17,6 @@ doc_id_title = {}
 term_frq_per_doc = []
 term_frq = {}
 doc_id_url = {}
-
-punctuations = [':', '،', '.', ')', '(', '}', '{', '؟', '!', '-', '/', '؛', '#', '*', '\n', '\"',
-                ']', '[', '«', '»', '٪', '+', '٠', '\\', '\"', '_', '\'']
-
-english_numbers_signs = ['0', '1', '2', '3', '4',
-                         '5', '6', '7', '8', '9', '%', '@', '_', "\"", '$', '&', ',', '"', '>', '<', '|',
-                         '­', ';', 'é', '=', '+', '?']
-
-escape = ['\u200c', '\u200b', '\u200f']
-
-numbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']
-
-english_chars_s = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-                   'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-
-english_chars_c = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-                   'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-
-stop_words = stopwords_list()
-stemmer = Stemmer()
-lemmatizer = Lemmatizer()
 
 count = 0
 doc_id = -1
@@ -52,42 +32,12 @@ for row in data:
 
     content = data[row]['content']
 
-    for punctuation in punctuations:
-        content = content.replace(punctuation, " ")
-
-    for number_sign in english_numbers_signs:
-        content = content.replace(number_sign, '')
-
-    for num in numbers:
-        content = content.replace(num, '')
-
-    for esc in escape:
-        content = content.replace(esc, '')
-
-    for char_s in english_chars_s:
-        content = content.replace(char_s, '')
-
-    for char_c in english_chars_c:
-        content = content.replace(char_c, '')
+    parser(content)
 
     terms = word_tokenize(content)
-    counter = 0
+    remove_stop_words(terms)
 
-    # removing stop words
-    for words in stop_words:
-        for term in terms:
-            if term == words:
-                counter = counter + 1
-        for i in range(counter):
-            terms.remove(words)
-        counter = 0
-
-    final_terms = list()
-
-    for term in terms:
-        res = stemmer.stem(term)
-        res = lemmatizer.lemmatize(res)
-        final_terms.append(res)
+    final_terms = stemmer_and_lemmatizer(terms)
 
     for i in final_terms:
         position_list = list()
@@ -150,4 +100,3 @@ try:
 
 except Exception as e:
     log_error("Main Program Error: {0}".format(e))
-
