@@ -5,6 +5,7 @@ from ibm_cloud import *
 import numpy as np
 import operator
 from preprocess import *
+import re
 
 
 def tfidf(tf, df, N):
@@ -28,6 +29,7 @@ positional_index = dict()
 doc_id_title = dict()
 doc_id_url = dict()
 term_frq_per_doc = dict()
+term_frq = dict()
 
 try:
     positional_index = get_file("positional_index.json")
@@ -42,12 +44,46 @@ try:
     term_frq_per_doc = get_file("term_frq_per_doc.json")
     term_frq_per_doc = load_dict(term_frq_per_doc)
 
+    term_frq = get_file("term_frq.json")
+    term_frq = load_dict(term_frq)
+
 except Exception as e:
     log_error("Main Program Error: {0}".format(e))
 
 query = input("Search: ")
 parser(query)
 query_list = query.split()
+query_dict = dict()
+for query_word in query_list:
+    query_dict[query_word] = list()
+    if "*" in query_word:
+        convert_query_word = query_word.replace("*", ".+")
+        for dictionary_term in positional_index.keys():
+            if re.search(convert_query_word, dictionary_term):
+                query_dict[query_word].append(dictionary_term)
+        if len(query_dict[query_word]) == 0:
+            query_dict[query_word].append(query_word.replace("*", ""))
+    else:
+        query_dict[query_word] = list()
+        query_dict[query_word].append(query_word)
+
+index_to_choose = list()
+for key in query_dict:
+    max = term_frq[query_dict[key][0]]
+    index = 0
+    for value in query_dict[key]:
+        temp = term_frq[value]
+        if temp > max:
+            max = temp
+            index = query_dict[key].index(value)
+    index_to_choose.append(index)
+
+query_list.clear()
+counter = 0
+for key in query_dict:
+    query_list.append(query_dict[key][index_to_choose[counter]])
+    counter = counter + 1
+
 remove_stop_words(query_list)
 q_l = list(query_list)
 query_list.clear()
@@ -174,7 +210,6 @@ while True:
 term_df = dict()
 for term in positional_index:
     term_df[term] = len(positional_index[term].keys())
-
 postings_list = dict()
 # showing top 10 results
 k = 10
@@ -192,9 +227,9 @@ except Exception as e:
     log_error("Main Program Error: {0}".format(e))
 
 scores = dict()
-for qt in query:
+for qt in query_list:
     df = term_df[qt]
-    qt_tf = query.count(qt)
+    qt_tf = query_list.count(qt)
     qt_weight = tfidf(df, qt_tf, N)
     qt_postings = postings_list[qt]
     for doc_id in qt_postings:
