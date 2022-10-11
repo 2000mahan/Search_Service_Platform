@@ -37,10 +37,55 @@ def non_word_spell_detection(word, dictionary, word_frequency, data):
         return word
 
 
+def real_word_spell_detection_correction(query_words, dictionary, word_frequency, data):
+    # P(w1, ..., wn) = P(w1) * P(w2|w1) * P(w3|w2) * ... * P(wn|wn-1)
+    p_w1 = (word_frequency[query_words[0]]) / (sum(word_frequency.values()))
+    bigram_probabilities = 1
+    counter = 1
+    for word in query_words[1:]:
+        c01 = 0
+        if query_words.index(word) == len(query_words):
+            for doc in dictionary[word]:
+                for position in dictionary[word][doc]:
+                    if (position + 1) in dictionary[query_words[counter + 1]][doc]:
+                        c01 = c01 + 1
+        bigram_probabilities = bigram_probabilities * (c01 / (word_frequency[word]))
+        counter = counter + 1
+    p_w = p_w1 * bigram_probabilities
+
+    final_words = dict()
+    for word in query_words:
+        final_candidates = dict()
+        word_itselt = edits0(word, dictionary, word_frequency, data)
+        edits1_words = edits1(word, dictionary, word_frequency, data)
+        edits2_words = edits2(word, dictionary, word_frequency, data)
+        homophone_words = homophones(word, dictionary, word_frequency, data)
+        most_probable_edit1_word = max(edits1_words.items(), key=lambda x: x[1])
+        most_probable_edit2_word = max(edits2_words.items(), key=lambda x: x[1])
+        most_probable_homophones = max(homophone_words.items(), key=lambda x: x[1])
+        final_candidates[word_itselt[0]] = word_itselt[1]
+        final_candidates[most_probable_edit1_word[0]] = most_probable_edit1_word[1]
+        final_candidates[most_probable_edit2_word[0]] = most_probable_edit2_word[1]
+        final_candidates[most_probable_homophones[0]] = most_probable_homophones[1]
+        suggestion = max(final_candidates.items(), key=lambda x: x[1])
+
+
 def non_word_spell_correction(word, dictionary, word_frequency, data):
     final_candidates = dict()
+
     edits1_words = edits1(word, dictionary, word_frequency, data)
+    edits1_words_keys = edits1_words.keys()
+    for term in edits1_words_keys:
+        p_w = (word_frequency[term]) / (sum(word_frequency.values()))
+        p_w_x = edits1_words[term] * p_w
+        edits1_words[term] = p_w_x
+
     edits2_words = edits2(word, dictionary, word_frequency, data)
+    edits2_words_keys = edits2_words.keys()
+    for term in edits2_words_keys:
+        p_w = (word_frequency[term]) / (sum(word_frequency.values()))
+        p_w_x = edits2_words[term] * p_w
+        edits2_words[term] = p_w_x
 
     most_probable_edit1_word = max(edits1_words.items(), key=lambda x: x[1])
     most_probable_edit2_word = max(edits2_words.items(), key=lambda x: x[1])
@@ -63,10 +108,8 @@ def edits0(word, dictionary, word_frequency, data):
     if key in data.keys():
         values = data[key][0].split(" ")
         p_x_w = values[0] / values[1]
-        p_w = (word_frequency[word]) / (sum(word_frequency.values()))
-        p_w_x = p_x_w * p_w
         word_itself.append(word)
-        word_itself.append(p_w_x)
+        word_itself.append(p_x_w)
         return word_itself
 
 
@@ -81,9 +124,7 @@ def homophones(word, dictionary, word_frequency, data):
             candidate = key[(len(word) + 1):]
             values = data[k][0].split(" ")
             p_x_w = values[0] / values[1]
-            p_w = (word_frequency[word]) / (sum(word_frequency.values()))
-            p_w_x = p_x_w * p_w
-            homophone_candidates[candidate] = p_w_x
+            homophone_candidates[candidate] = p_x_w
 
     return homophone_candidates
 
@@ -112,9 +153,7 @@ def edits1(word, dictionary, word_frequency, data):
                         summation = summation + word_frequency[w]
 
             p_x_w = data.keys()[0] / summation
-            p_w = word_frequency[word] / (sum(word_frequency.values()))
-            p_w_x = p_x_w * p_w
-            edit1_candidates[deletes[counter]] = p_w_x
+            edit1_candidates[deletes[counter]] = p_x_w
 
         counter = counter + 1
         summation = 0
@@ -135,9 +174,7 @@ def edits1(word, dictionary, word_frequency, data):
                     if c01 in w:
                         summation = summation + word_frequency[w]
             p_x_w = data.keys()[0] / summation
-            p_w = word_frequency[word] / (sum(word_frequency.values()))
-            p_w_x = p_x_w * p_w
-            edit1_candidates[transposes[counter]] = p_w_x
+            edit1_candidates[transposes[counter]] = p_x_w
         counter = counter + 1
         summation = 0
 
@@ -156,9 +193,7 @@ def edits1(word, dictionary, word_frequency, data):
                             if c0 in w:
                                 summation = summation + word_frequency[w]
                     p_x_w = data.keys()[0] / summation
-                    p_w = word_frequency[word] / (sum(word_frequency.values()))
-                    p_w_x = p_x_w * p_w
-                    edit1_candidates[replace] = p_w_x
+                    edit1_candidates[replace] = p_x_w
         summation = 0
 
     # Insertion Probability Calculation
@@ -174,9 +209,7 @@ def edits1(word, dictionary, word_frequency, data):
                             if a in w:
                                 summation = summation + word_frequency[w]
                     p_x_w = data.keys()[0] / summation
-                    p_w = word_frequency[word] / (sum(word_frequency.values()))
-                    p_w_x = p_x_w * p_w
-                    edit1_candidates[insert] = p_w_x
+                    edit1_candidates[insert] = p_x_w
         summation = 0
 
     return edit1_candidates
