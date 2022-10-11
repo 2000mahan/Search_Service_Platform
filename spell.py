@@ -38,36 +38,44 @@ def non_word_spell_detection(word, dictionary, word_frequency, data):
 
 
 def real_word_spell_detection_correction(query_words, dictionary, word_frequency, data):
-    # P(w1, ..., wn) = P(w1) * P(w2|w1) * P(w3|w2) * ... * P(wn|wn-1)
-    p_w1 = (word_frequency[query_words[0]]) / (sum(word_frequency.values()))
-    bigram_probabilities = 1
-    counter = 1
-    for word in query_words[1:]:
-        c01 = 0
-        if query_words.index(word) == len(query_words):
-            for doc in dictionary[word]:
-                for position in dictionary[word][doc]:
-                    if (position + 1) in dictionary[query_words[counter + 1]][doc]:
-                        c01 = c01 + 1
-        bigram_probabilities = bigram_probabilities * (c01 / (word_frequency[word]))
-        counter = counter + 1
-    p_w = p_w1 * bigram_probabilities
-
-    final_words = dict()
+    final_candidates = dict()
     for word in query_words:
-        final_candidates = dict()
-        word_itselt = edits0(word, dictionary, word_frequency, data)
-        edits1_words = edits1(word, dictionary, word_frequency, data)
-        edits2_words = edits2(word, dictionary, word_frequency, data)
-        homophone_words = homophones(word, dictionary, word_frequency, data)
-        most_probable_edit1_word = max(edits1_words.items(), key=lambda x: x[1])
-        most_probable_edit2_word = max(edits2_words.items(), key=lambda x: x[1])
-        most_probable_homophones = max(homophone_words.items(), key=lambda x: x[1])
-        final_candidates[word_itselt[0]] = word_itselt[1]
-        final_candidates[most_probable_edit1_word[0]] = most_probable_edit1_word[1]
-        final_candidates[most_probable_edit2_word[0]] = most_probable_edit2_word[1]
-        final_candidates[most_probable_homophones[0]] = most_probable_homophones[1]
-        suggestion = max(final_candidates.items(), key=lambda x: x[1])
+        word_index = query_words.index(word)
+        candidates = {**edits0(word, dictionary, word_frequency, data),
+                      **edits1(word, dictionary, word_frequency, data),
+                      **edits2(word, dictionary, word_frequency, data),
+                      **homophones(word, dictionary, word_frequency, data)}
+        candidate_sentences = dict()
+        for term in candidates:
+            query_words[word_index] = term
+            # P(w1, ..., wn) = P(w1) * P(w2|w1) * P(w3|w2) * ... * P(wn|wn-1)
+            p_w1 = (word_frequency[query_words[0]]) / (sum(word_frequency.values()))
+            bigram_probabilities = 1
+            counter = 1
+            for w in query_words[1:]:
+                c01 = 0
+                if query_words.index(word) == len(query_words):
+                    for doc in dictionary[word]:
+                        for position in dictionary[word][doc]:
+                            if (position + 1) in dictionary[query_words[counter + 1]][doc]:
+                                c01 = c01 + 1
+                bigram_probabilities = bigram_probabilities * (c01 / (word_frequency[word]))
+                counter = counter + 1
+            p_w = p_w1 * bigram_probabilities
+            p_x_w = 1
+            for w in query_words:
+                if w == term:
+                    continue
+                word_itself = edits0(w, dictionary, word_frequency, data)
+                p_x_w = p_x_w * word_itself[1]
+            p_w_x = p_w * p_x_w
+            sentence = ''.join(query_words)
+            candidate_sentences[sentence] = p_w_x
+        candidate_sentence = max(candidate_sentences.items(), key=lambda x: x[1])
+        final_candidates[candidate_sentence[0]] = candidate_sentence[1]
+        query_words[word_index] = word
+    most_probable_sentence = max(final_candidates.items(), key=lambda x: x[1])
+    return most_probable_sentence[0]
 
 
 def non_word_spell_correction(word, dictionary, word_frequency, data):
@@ -93,10 +101,6 @@ def non_word_spell_correction(word, dictionary, word_frequency, data):
     final_candidates[most_probable_edit2_word[0]] = most_probable_edit2_word[1]
     suggestion = max(final_candidates.items(), key=lambda x: x[1])
     return suggestion[0]
-
-
-def known(words, dictionary):
-    return [w for w in words if w in dictionary]
 
 
 def edits0(word, dictionary, word_frequency, data):
