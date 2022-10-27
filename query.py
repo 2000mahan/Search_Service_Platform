@@ -67,7 +67,7 @@ for word in query_list:
 #exit()
 
 # Real-word spell detection and correction
-
+#query_list = real_word_spell_detection_correction(query_list, positional_index, term_frq, data).split()
 
 query_dict = dict()
 for query_word in query_list:
