@@ -6,6 +6,7 @@ import numpy as np
 import operator
 from preprocess import *
 import re
+from spell import *
 
 
 def tfidf(tf, df, N):
@@ -53,6 +54,21 @@ except Exception as e:
 query = input("Search: ")
 parser(query)
 query_list = query.split()
+
+data = download_dataset()
+count = 0
+
+# Non-word spell detection and correction
+for word in query_list:
+    query_list[count] = non_word_spell_detection(word, positional_index, term_frq, data)
+    count = count + 1
+
+#print(query_list)
+#exit()
+
+# Real-word spell detection and correction
+
+
 query_dict = dict()
 for query_word in query_list:
     query_dict[query_word] = list()

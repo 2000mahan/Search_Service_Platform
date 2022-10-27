@@ -1,5 +1,17 @@
 import re
 from ibm_cloud import *
+from textblob import Word
+
+
+def check_word_spelling(word):
+    word = Word(word)
+
+    result = word.spellcheck()
+
+    if word == result[0][0]:
+        return True
+    else:
+        return False
 
 
 def upload_dataset():
@@ -43,7 +55,7 @@ def real_word_spell_detection_correction(query_words, dictionary, word_frequency
         word_index = query_words.index(word)
         candidates = {**edits0(word, dictionary, word_frequency, data),
                       **edits1(word, dictionary, word_frequency, data),
-                      **edits2(word, dictionary, word_frequency, data),
+                      # **edits2(word, dictionary, word_frequency, data),
                       **homophones(word, dictionary, word_frequency, data)}
         candidate_sentences = dict()
         for term in candidates:
@@ -84,21 +96,24 @@ def non_word_spell_correction(word, dictionary, word_frequency, data):
     edits1_words = edits1(word, dictionary, word_frequency, data)
     edits1_words_keys = edits1_words.keys()
     for term in edits1_words_keys:
-        p_w = (word_frequency[term]) / (sum(word_frequency.values()))
-        p_w_x = edits1_words[term] * p_w
-        edits1_words[term] = p_w_x
+        # the three following lines are the correct way of calculation
+        # p_w = (word_frequency[term]) / (sum(word_frequency.values()))
+        # p_w_x = edits1_words[term] * p_w
+        # edits1_words[term] = p_w_x
+        # the following line is due to unavailability of dataset
+        edits1_words[term] = edits1_words[term]
 
-    edits2_words = edits2(word, dictionary, word_frequency, data)
-    edits2_words_keys = edits2_words.keys()
-    for term in edits2_words_keys:
-        p_w = (word_frequency[term]) / (sum(word_frequency.values()))
-        p_w_x = edits2_words[term] * p_w
-        edits2_words[term] = p_w_x
+    # edits2_words = edits2(word, dictionary, word_frequency, data)
+    # edits2_words_keys = edits2_words.keys()
+    # for term in edits2_words_keys:
+    # p_w = (word_frequency[term]) / (sum(word_frequency.values()))
+    # p_w_x = edits2_words[term] * p_w
+    # edits2_words[term] = p_w_x
 
     most_probable_edit1_word = max(edits1_words.items(), key=lambda x: x[1])
-    most_probable_edit2_word = max(edits2_words.items(), key=lambda x: x[1])
+    # most_probable_edit2_word = max(edits2_words.items(), key=lambda x: x[1])
     final_candidates[most_probable_edit1_word[0]] = most_probable_edit1_word[1]
-    final_candidates[most_probable_edit2_word[0]] = most_probable_edit2_word[1]
+    # final_candidates[most_probable_edit2_word[0]] = most_probable_edit2_word[1]
     suggestion = max(final_candidates.items(), key=lambda x: x[1])
     return suggestion[0]
 
@@ -142,42 +157,49 @@ def edits1(word, dictionary, word_frequency, data):
     deletes = [a + b[1:] for (a, b) in pairs if b]
     # Deletion Probability Calculation
     for (a, b) in pairs:
-        if b and deletes[counter] in dictionary:
+        # if b and deletes[counter] in dictionary:
+        if b and check_word_spelling(deletes[counter]):
             if len(a) != 0:
                 c0 = a[len(a) - 1]
             else:
                 c0 = " "
             c1 = b[0]
-            c01 = c0 + "" + c1
-            key = c0 + "|" + c01
+            key = c0 + "|" + c1
+            if key not in data.keys():
+                continue
             summation = 0
             if key in data.keys():
                 for w in word_frequency:
-                    if c01 in w:
+                    if c1 in w:
                         summation = summation + word_frequency[w]
 
-            p_x_w = data.keys()[0] / summation
+            # p_x_w = data.keys()[0] / summation
+            p_x_w = data[key][0]
             edit1_candidates[deletes[counter]] = p_x_w
 
         counter = counter + 1
         summation = 0
 
     transposes = [a + b[1] + b[0] + b[2:] for (a, b) in pairs if len(b) > 1]
-
+    counter = 0
     # Transposition Probability Calculation
     for (a, b) in pairs:
-        if len(b) > 1 and transposes[counter] in dictionary:
+        # if len(b) > 1 and transposes[counter] in dictionary:
+        if len(b) > 1 and check_word_spelling(transposes[counter]):
             c0 = b[0]
             c1 = b[1]
             c01 = b[0] + "" + b[1]
             c10 = b[1] + "" + b[0]
             key = c10 + "|" + c01
+            if key not in data.keys():
+                continue
             summation = 0
             if key in data.keys():
                 for w in word_frequency:
                     if c01 in w:
                         summation = summation + word_frequency[w]
-            p_x_w = data.keys()[0] / summation
+            # p_x_w = data.keys()[0] / summation
+            p_x_w = data[key][0]
             edit1_candidates[transposes[counter]] = p_x_w
         counter = counter + 1
         summation = 0
@@ -187,41 +209,49 @@ def edits1(word, dictionary, word_frequency, data):
         if b:
             for c in alphabet:
                 replace = a + c + b[1:]
-                if replace in dictionary:
+                # if replace in dictionary:
+                if check_word_spelling(replace):
                     c0 = b[0]
                     c1 = c
                     key = c1 + "|" + c0
+                    if key not in data.keys():
+                        continue
                     summation = 0
                     if key in data.keys():
                         for w in word_frequency:
                             if c0 in w:
                                 summation = summation + word_frequency[w]
-                    p_x_w = data.keys()[0] / summation
+                    # p_x_w = data.keys()[0] / summation
+                    p_x_w = data[key][0]
                     edit1_candidates[replace] = p_x_w
         summation = 0
 
     # Insertion Probability Calculation
     for (a, b) in pairs:
-        if b:
+        if True:
             for c in alphabet:
                 insert = a + c + b
-                if insert in dictionary:
+                # if insert in dictionary:
+                if check_word_spelling(insert):
                     key = a + c + "|" + a
+                    if key not in data.keys():
+                        continue
                     summation = 0
                     if key in data.keys():
                         for w in word_frequency:
                             if a in w:
                                 summation = summation + word_frequency[w]
-                    p_x_w = data.keys()[0] / summation
+                    # p_x_w = data.keys()[0] / summation
+                    p_x_w = data[key][0]
                     edit1_candidates[insert] = p_x_w
         summation = 0
 
     return edit1_candidates
 
 
-def edits2(word, dictionary, word_frequency, data):
-    return {e2 for e1 in edits1(word, dictionary, word_frequency, data) for e2 in
-            edits1(e1, dictionary, word_frequency, data)}
+# def edits2(word, dictionary, word_frequency, data):
+#    return {e2 for e1 in edits1(word, dictionary, word_frequency, data) for e2 in
+#            edits1(e1, dictionary, word_frequency, data)}
 
 
 def splits(word):
