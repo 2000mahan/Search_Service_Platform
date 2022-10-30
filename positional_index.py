@@ -5,6 +5,19 @@ from ibm_cloud import *
 import os
 from preprocess import *
 
+
+with open("data.json", "r") as read_file:
+    data = json.load(read_file)
+
+    try:
+        bucket_name = "ir-data"
+        file_name = "data" + ".json"
+        file_content = json.dumps(data).encode('utf-8')
+        create_file(bucket_name, file_name, file_content)
+    except Exception as e:
+        log_error("Main Program Error: {0}".format(e))
+
+
 try:
     data = get_file("data.json")
     data = load_dict(data)
