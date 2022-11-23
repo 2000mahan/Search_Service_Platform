@@ -12,6 +12,9 @@ load_dotenv(os.getenv('ENV_FILE', '.env'))
 
 # Request format: curl -X POST -H "Content-type: application/json" -d "{\"query\" : \"دانشگاه صنعتی امیرکبیر\"}"
 # "http://127.0.0.1:5000/search"
+
+# curl -X POST -H "Content-type: application/json" -d "{\"query\" : \"دانشگاه صنعتی امیرکبیر\"}" "app-service/search"
+
 @app.route('/search', methods=['POST'])
 def search():
     content_type = request.headers.get('Content-Type')

@@ -1,5 +1,4 @@
 import collections
-from hazm import *
 import json
 from ibm_cloud import *
 import os
