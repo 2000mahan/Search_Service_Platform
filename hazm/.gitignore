@@ -1,0 +1,7 @@
+.idea
+resources
+corpora
+build
+dist
+*.pyc
+hazm.egg-info
