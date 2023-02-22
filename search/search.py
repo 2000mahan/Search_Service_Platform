@@ -56,17 +56,6 @@ def create_statistics():
         return "Content-Type not supported!"
 
 
-# curl get "http://127.0.0.1:5000/upload_spelling_dataset"
-@app.route('/upload_spelling_dataset', methods=['GET'])
-def upload_spelling_dataset():
-    token = request.headers.get('token')
-    bucket_name = request.headers.get('bucket_name')
-    u_id = user_id(token)
-    upload_dataset(u_id, bucket_name)
-
-    return "Successfully uploaded spelling dataset"
-
-
 # curl -X POST -H "Content-type: application/json" -d "{\"range\" : \"20\"}"
 # "http://127.0.0.1:5000/create_champion_lists"
 @app.route('/create_champion_lists', methods=['POST'])
