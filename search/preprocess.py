@@ -1,9 +1,14 @@
+import nltk
+
 from hazm import *
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.stem.porter import PorterStemmer
 from nltk.corpus import stopwords
+
+nltk.download('punkt')
+nltk.download('stopwords')
 
 punctuations = [':', '،', '.', ')', '(', '}', '{', '؟', '!', '-', '/', '؛', '#', '*', '\n', '\"',
                 ']', '[', '«', '»', '٪', '+', '٠', '\\', '\"', '_', '\'']

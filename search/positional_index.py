@@ -5,6 +5,8 @@ import os
 from preprocess import *
 import nltk
 
+nltk.download('punkt')
+nltk.download('stopwords')
 
 def create_indices(language, u_id, bucket_name):
 
