@@ -3,7 +3,7 @@ import json
 from ibm_cloud import *
 import os
 from preprocess import *
-import nltk_downloader
+import nltk
 
 
 def create_indices(language, u_id, bucket_name):
