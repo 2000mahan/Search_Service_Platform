@@ -3,22 +3,17 @@ import json
 from ibm_cloud import *
 import os
 from preprocess import *
-import nltk
+import nltk_downloader
 
-nltk.download('punkt')
-nltk.download('stopwords')
 
 def create_indices(language, u_id, bucket_name):
-
     try:
         file_name = language + u_id + "data.json"
         data = get_file(file_name)
         data = load_dict(data)
-        print("hey")
 
     except Exception as e:
         log_error("Main Program Error: {0}".format(e))
-        print("hey1")
 
     positional_index = {}
     doc_id_title = {}

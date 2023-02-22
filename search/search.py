@@ -10,6 +10,7 @@ from NDCG import *
 from query import *
 from spell import *
 import time
+from nltk_downloader import *
 
 app = Flask(__name__)
 
