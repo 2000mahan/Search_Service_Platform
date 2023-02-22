@@ -44,15 +44,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/create_positional_index",
+					"raw": "http://188.121.118.196/create_positional_index",
 					"protocol": "http",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"188",
+						"121",
+						"118",
+						"196"
 					],
-					"port": "5000",
 					"path": [
 						"create_positional_index"
 					]
@@ -88,14 +87,6 @@
 						"create_positional_index"
 					]
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "Upload Spelling Dataset",
-			"request": {
-				"method": "GET",
-				"header": []
 			},
 			"response": []
 		},
@@ -345,15 +336,14 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:5000/test",
+					"raw": "http://188.121.118.196/test",
 					"protocol": "http",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"188",
+						"121",
+						"118",
+						"196"
 					],
-					"port": "5000",
 					"path": [
 						"test"
 					]
