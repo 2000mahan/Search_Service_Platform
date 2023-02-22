@@ -18,7 +18,7 @@ spec:
         app: search
     spec:
       containers:
-      - image: 20mh00/ssp:1
+      - image: 20mh00/ssp:1.0
         name: search
         ports:
           - containerPort: 8080
