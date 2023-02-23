@@ -28,11 +28,10 @@ def search():
     content_type = request.headers.get('Content-Type')
     token = request.headers.get('token')
     u_id = user_id(token)
-    ibm_credentials_url = request.headers.get('ibm_credentials_url')
     if content_type == 'application/json':
         input_query = request.json
         start_time = time.time()
-        search_result = query(input_query['query'], u_id, ibm_credentials_url)
+        search_result = query(input_query['query'], u_id, input_query['ibm_credentials_url'])
         t = time.time() - start_time
         t = str(t)
         t = "Retrieval Time: " + t + " seconds"
@@ -78,12 +77,10 @@ def create_champion_lists():
 def create_positional_index():
     content_type = request.headers.get('Content-Type')
     token = request.headers.get('token')
-    bucket_name = request.headers.get('bucket_name')
     u_id = user_id(token)
-    ibm_credentials_url = request.headers.get('ibm_credentials_url')
     if content_type == 'application/json':
         input_query = request.json
-        create_indices(input_query["language"], u_id, bucket_name, ibm_credentials_url)
+        create_indices(input_query["language"], u_id, input_query['bucket_name'], input_query['ibm_credentials_url'])
         document_lengths(input_query["language"], u_id)
         return "Successfully created positional_index"
     else:
@@ -92,10 +89,14 @@ def create_positional_index():
 
 @app.route('/test', methods=['POST'])
 def test():
+    content_type = request.headers.get('Content-Type')
     token = request.headers.get('token')
     u_id = user_id(token)
-    ibm_credentials_url = request.headers.get('ibm_credentials_url')
-    return '{}'.format(NDCG_test(u_id, ibm_credentials_url))
+    if content_type == 'application/json':
+        input_query = request.json
+        return '{}'.format(NDCG_test(u_id, input_query['ibm_credentials_url']))
+    else:
+        return "Content-Type not supported!"
 
 
 if __name__ == '__main__':

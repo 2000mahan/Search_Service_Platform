@@ -17,25 +17,19 @@
 						"type": "text"
 					},
 					{
-						"key": "bucket_name",
+						"key": "x-bucket_name",
 						"value": "ir-data",
 						"type": "text"
 					},
 					{
-						"key": "ibm_credentials_url",
+						"key": "x-ibm_credentials_url",
 						"value": "https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download",
 						"type": "text"
-					},
-					{
-						"key": "",
-						"value": "",
-						"type": "text",
-						"disabled": true
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"language\" : \"Persian\"}\n",
+					"raw": "{\"language\" : \"Persian\", \"bucket_name\": \"ir-data\", \"ibm_credentials_url\" : \"https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download\"}\n\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -67,21 +61,11 @@
 						"key": "token",
 						"value": "1234",
 						"type": "text"
-					},
-					{
-						"key": "bucket_name",
-						"value": "ir-data",
-						"type": "text"
-					},
-					{
-						"key": "ibm_credentials_url",
-						"value": "https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download",
-						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"language\" : \"English\"}\n",
+					"raw": "{\"language\" : \"English\", \"bucket_name\": \"ir-data\", \"ibm_credentials_url\" : \"https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download\"}\n\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -89,14 +73,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://188.121.118.196/create_positional_index",
+					"raw": "http://127.0.0.1:5000/create_positional_index",
 					"protocol": "http",
 					"host": [
-						"188",
-						"121",
-						"118",
-						"196"
+						"127",
+						"0",
+						"0",
+						"1"
 					],
+					"port": "5000",
 					"path": [
 						"create_positional_index"
 					]
@@ -112,11 +97,6 @@
 					{
 						"key": "token",
 						"value": "1234",
-						"type": "text"
-					},
-					{
-						"key": "bucket_name",
-						"value": "ir-data",
 						"type": "text"
 					}
 				],
@@ -150,7 +130,13 @@
 			"name": "Create Champion Lists",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "token",
+						"value": "1234",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\"range\" : \"20\"}",
@@ -181,10 +167,16 @@
 			"name": "English Search 1",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "token",
+						"value": "1234",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"query\" : \"extraordinarily successful mission\"}",
+					"raw": "{\"query\" : \"extraordinarily successful mission\", \"ibm_credentials_url\" : \"https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download\"}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -192,15 +184,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/search",
+					"raw": "http://188.121.118.196/search",
 					"protocol": "http",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"188",
+						"121",
+						"118",
+						"196"
 					],
-					"port": "5000",
 					"path": [
 						"search"
 					]
@@ -212,10 +203,16 @@
 			"name": "English Search 2",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "token",
+						"value": "1234",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"query\" : \"extraordinarili succesful mission\"}",
+					"raw": "{\"query\" : \"extraordinarily succesful mission\", \"ibm_credentials_url\" : \"https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download\"}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -248,16 +245,11 @@
 						"key": "token",
 						"value": "1234",
 						"type": "text"
-					},
-					{
-						"key": "ibm_credentials_url",
-						"value": "https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download",
-						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"query\" : \"extraordinarily success* mission\"}",
+					"raw": "{\"query\" : \"extraordinarily success* mission\", \"ibm_credentials_url\" : \"https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download\"}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -285,10 +277,16 @@
 			"name": "Persian Search 1",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "token",
+						"value": "1234",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"query\" : \"فینال مسابقات\"}",
+					"raw": "{\"query\" : \"فینال مسابقات\", \"ibm_credentials_url\" : \"https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download\"}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -321,16 +319,11 @@
 						"key": "token",
 						"value": "1234",
 						"type": "text"
-					},
-					{
-						"key": "ibm_credentials_url",
-						"value": "https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download",
-						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"query\" : \"فین* مسابقات\"}",
+					"raw": "{\"query\" : \"فین* مسابقات\", \"ibm_credentials_url\" : \"https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download\"}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -338,14 +331,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://188.121.118.196/search",
+					"raw": "http://127.0.0.1:5000/search",
 					"protocol": "http",
 					"host": [
-						"188",
-						"121",
-						"118",
-						"196"
+						"127",
+						"0",
+						"0",
+						"1"
 					],
+					"port": "5000",
 					"path": [
 						"search"
 					]
@@ -362,13 +356,17 @@
 						"key": "token",
 						"value": "1234",
 						"type": "text"
-					},
-					{
-						"key": "ibm_credentials_url",
-						"value": "https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download",
-						"type": "text"
 					}
 				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"ibm_credentials_url\" : \"https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download\"}\n\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "http://188.121.118.196/test",
 					"protocol": "http",
