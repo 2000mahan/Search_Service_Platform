@@ -10,7 +10,7 @@ from NDCG import *
 from query import *
 from spell import *
 import time
-
+import requests
 
 app = Flask(__name__)
 
@@ -28,10 +28,11 @@ def search():
     content_type = request.headers.get('Content-Type')
     token = request.headers.get('token')
     u_id = user_id(token)
+    ibm_credentials_url = request.headers.get('ibm_credentials_url')
     if content_type == 'application/json':
         input_query = request.json
         start_time = time.time()
-        search_result = query(input_query['query'], u_id)
+        search_result = query(input_query['query'], u_id, ibm_credentials_url)
         t = time.time() - start_time
         t = str(t)
         t = "Retrieval Time: " + t + " seconds"
@@ -46,11 +47,10 @@ def search():
 def create_statistics():
     content_type = request.headers.get('Content-Type')
     token = request.headers.get('token')
-    bucket_name = request.headers.get('bucket_name')
     u_id = user_id(token)
     if content_type == 'application/json':
         input_query = request.json
-        create_statistics_file(input_query["top_k_results"], input_query["champion_lists_status"], u_id, bucket_name)
+        create_statistics_file(input_query["top_k_results"], input_query["champion_lists_status"], u_id)
         return "Successfully created statistics file"
     else:
         return "Content-Type not supported!"
@@ -62,12 +62,11 @@ def create_statistics():
 def create_champion_lists():
     content_type = request.headers.get('Content-Type')
     token = request.headers.get('token')
-    bucket_name = request.headers.get('bucket_name')
     u_id = user_id(token)
     if content_type == 'application/json':
         input_query = request.json
-        champion_lists(input_query["range"], "English", u_id, bucket_name)
-        champion_lists(input_query["range"], "Persian", u_id, bucket_name)
+        champion_lists(input_query["range"], "English", u_id)
+        champion_lists(input_query["range"], "Persian", u_id)
         return "Successfully created champion lists"
     else:
         return "Content-Type not supported!"
@@ -81,10 +80,11 @@ def create_positional_index():
     token = request.headers.get('token')
     bucket_name = request.headers.get('bucket_name')
     u_id = user_id(token)
+    ibm_credentials_url = request.headers.get('ibm_credentials_url')
     if content_type == 'application/json':
         input_query = request.json
-        create_indices(input_query["language"], u_id, bucket_name)
-        document_lengths(input_query["language"], u_id, bucket_name)
+        create_indices(input_query["language"], u_id, bucket_name, ibm_credentials_url)
+        document_lengths(input_query["language"], u_id)
         return "Successfully created positional_index"
     else:
         return "Content-Type not supported!"
@@ -94,7 +94,8 @@ def create_positional_index():
 def test():
     token = request.headers.get('token')
     u_id = user_id(token)
-    return '{}'.format(NDCG_test(u_id))
+    ibm_credentials_url = request.headers.get('ibm_credentials_url')
+    return '{}'.format(NDCG_test(u_id, ibm_credentials_url))
 
 
 if __name__ == '__main__':

@@ -1,6 +1,7 @@
 import re
 from ibm_cloud import *
 from langdetect import detect
+import requests
 
 
 def upload_dataset(u_id, bucket_name):
@@ -21,9 +22,13 @@ def upload_dataset(u_id, bucket_name):
             log_error("Main Program Error: {0}".format(e))
 
 
-def download_dataset(u_id):
+def download_dataset(u_id, ibm_credentials_url):
+    response = requests.get(ibm_credentials_url)
+    open("credentials.json", "wb").write(response.content)
+    with open("credentials.json", "r") as read_file:
+        credentials = json.load(read_file)
     try:
-        data = get_file("spell_correction_dataset" + u_id + ".json")
+        data = get_file("spell_correction_dataset" + u_id + ".json", credentials)
         data = load_dict(data)
         return data
 

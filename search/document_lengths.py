@@ -9,20 +9,20 @@ def tfidf(tf, df, N):
     return (1 + np.log10(tf)) * np.log10(1. * N / df)
 
 
-def document_lengths(language, u_id, bucket_name):
+def document_lengths(language, u_id):
     positional_index = dict()
     doc_id_title = dict()
     term_frq_per_doc = dict()
 
     try:
-        positional_index = get_file("positional_index" + language + u_id + ".json")
-        positional_index = load_dict(positional_index)
+        with open("positional_index" + language + u_id + ".json", "r") as read_file:
+            positional_index = json.load(read_file)
 
-        doc_id_title = get_file("doc_id_title" + language + u_id + ".json")
-        doc_id_title = load_dict(doc_id_title)
+        with open("doc_id_title" + language + u_id + ".json", "r") as read_file:
+            doc_id_title = json.load(read_file)
 
-        term_frq_per_doc = get_file("term_frq_per_doc" + language + u_id + ".json")
-        term_frq_per_doc = load_dict(term_frq_per_doc)
+        with open("term_frq_per_doc" + language + u_id + ".json", "r") as read_file:
+            term_frq_per_doc = json.load(read_file)
 
     except Exception as e:
         log_error("Main Program Error: {0}".format(e))
@@ -47,7 +47,7 @@ def document_lengths(language, u_id, bucket_name):
     lengths = list(lengths)
     try:
         file_name = "lengths" + language + u_id + ".json"
-        file_content = json.dumps(lengths).encode('utf-8')
-        create_file(bucket_name, file_name, file_content)
+        with open(file_name, "w") as write_file:
+            json.dump(lengths, write_file)
     except Exception as e:
         log_error("Main Program Error: {0}".format(e))

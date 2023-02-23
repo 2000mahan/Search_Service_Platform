@@ -22,10 +22,9 @@
 						"type": "text"
 					},
 					{
-						"key": "",
-						"value": "",
-						"type": "text",
-						"disabled": true
+						"key": "ibm_credentials_url",
+						"value": "https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download",
+						"type": "text"
 					},
 					{
 						"key": "",
@@ -63,7 +62,23 @@
 			"name": "Index_English",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "token",
+						"value": "1234",
+						"type": "text"
+					},
+					{
+						"key": "bucket_name",
+						"value": "ir-data",
+						"type": "text"
+					},
+					{
+						"key": "ibm_credentials_url",
+						"value": "https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\"language\" : \"English\"}\n",
@@ -74,15 +89,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/create_positional_index",
+					"raw": "http://188.121.118.196/create_positional_index",
 					"protocol": "http",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"188",
+						"121",
+						"118",
+						"196"
 					],
-					"port": "5000",
 					"path": [
 						"create_positional_index"
 					]
@@ -229,10 +243,21 @@
 			"name": "English Search 3",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "token",
+						"value": "1234",
+						"type": "text"
+					},
+					{
+						"key": "ibm_credentials_url",
+						"value": "https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"query\" : \"extraordinarily success* mission}",
+					"raw": "{\"query\" : \"extraordinarily success* mission\"}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -296,6 +321,11 @@
 						"key": "token",
 						"value": "1234",
 						"type": "text"
+					},
+					{
+						"key": "ibm_credentials_url",
+						"value": "https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download",
+						"type": "text"
 					}
 				],
 				"body": {
@@ -308,15 +338,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/search",
+					"raw": "http://188.121.118.196/search",
 					"protocol": "http",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"188",
+						"121",
+						"118",
+						"196"
 					],
-					"port": "5000",
 					"path": [
 						"search"
 					]
@@ -332,6 +361,11 @@
 					{
 						"key": "token",
 						"value": "1234",
+						"type": "text"
+					},
+					{
+						"key": "ibm_credentials_url",
+						"value": "https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download",
 						"type": "text"
 					}
 				],

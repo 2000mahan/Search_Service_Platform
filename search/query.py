@@ -25,14 +25,14 @@ def champion_lists_create(status, postings_list, positional_index, language, u_i
         return postings_list
     else:
         try:
-            postings_lists = get_file("postings_lists" + language + u_id + ".json")
-            postings_lists = load_dict(postings_lists)
+            with open("postings_lists" + language + u_id + ".json", "r") as read_file:
+                postings_lists = json.load(read_file)
         except Exception as e:
             log_error("Main Program Error: {0}".format(e))
         return postings_list
 
 
-def query(input_query, u_id):
+def query(input_query, u_id, ibm_credentials_url):
     pattern = re.compile("[A-Za-z]+")
     match = re.search(pattern, input_query)
     if match is not None:
@@ -49,23 +49,23 @@ def query(input_query, u_id):
     statistics = dict()
 
     try:
-        positional_index = get_file("positional_index" + language + u_id + ".json")
-        positional_index = load_dict(positional_index)
+        with open("positional_index" + language + u_id + ".json", "r") as read_file:
+            positional_index = json.load(read_file)
 
-        doc_id_title = get_file("doc_id_title" + language + u_id + ".json")
-        doc_id_title = load_dict(doc_id_title)
+        with open("doc_id_title" + language + u_id + ".json", "r") as read_file:
+            doc_id_title = json.load(read_file)
 
-        doc_id_url = get_file("doc_id_url" + language + u_id + ".json")
-        doc_id_url = load_dict(doc_id_url)
+        with open("term_frq_per_doc" + language + u_id + ".json", "r") as read_file:
+            term_frq_per_doc = json.load(read_file)
 
-        term_frq_per_doc = get_file("term_frq_per_doc" + language + u_id + ".json")
-        term_frq_per_doc = load_dict(term_frq_per_doc)
+        with open("doc_id_url" + language + u_id + ".json", "r") as read_file:
+            doc_id_url = json.load(read_file)
 
-        term_frq = get_file("term_frq" + language + u_id + ".json")
-        term_frq = load_dict(term_frq)
+        with open("term_frq" + language + u_id + ".json", "r") as read_file:
+            term_frq = json.load(read_file)
 
-        statistics = get_file("statistics" + u_id + ".json")
-        statistics = load_dict(statistics)
+        with open("statistics" + u_id + ".json", "r") as read_file:
+            statistics = json.load(read_file)
 
     except Exception as e:
         log_error("Main Program Error: {0}".format(e))
@@ -77,7 +77,7 @@ def query(input_query, u_id):
         parser_persian(query)
 
     query_list = query.split()
-    data = download_dataset(u_id)
+    data = download_dataset(u_id, ibm_credentials_url)
     count = 0
 
     for word in query_list:
@@ -261,8 +261,8 @@ def query(input_query, u_id):
 
     lengths = list()
     try:
-        lengths = get_file("lengths" + language + u_id + ".json")
-        lengths = load_dict(lengths)
+        with open("lengths" + language + u_id + ".json", "r") as read_file:
+            lengths = json.load(read_file)
 
     except Exception as e:
         log_error("Main Program Error: {0}".format(e))

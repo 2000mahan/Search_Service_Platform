@@ -5,6 +5,7 @@ from query import *
 import numpy as np
 from positional_index import *
 from user_management import *
+import requests
 
 doc_id_content = dict()
 language = ""
@@ -14,11 +15,15 @@ def split(word):
     return [char for char in word]
 
 
-def NDCG_test(u_id):
+def NDCG_test(u_id, ibm_credentials_url):
     accuracy = 0
+    response = requests.get(ibm_credentials_url)
+    open("credentials.json", "wb").write(response.content)
+    with open("credentials.json", "r") as read_file:
+        credentials = json.load(read_file)
     try:
         file_name = u_id + "test.json"
-        test_data = get_file(file_name)
+        test_data = get_file(file_name, credentials)
         test_data = load_dict(test_data)
 
     except Exception as e:
@@ -33,9 +38,8 @@ def NDCG_test(u_id):
             language = "Persian"
 
         try:
-            filename = "doc_id_content" + language + u_id + ".json"
-            doc_id_content = get_file(filename)
-            doc_id_content = load_dict(doc_id_content)
+            with open("doc_id_content" + language + u_id + ".json", "r") as read_file:
+                doc_id_content = json.load(read_file)
 
         except Exception as e:
             log_error("Main Program Error: {0}".format(e))
@@ -93,7 +97,7 @@ def NDCG_test(u_id):
         del possible_strings[len(possible_strings) - 1]
         doc_ids = list()
         doc_id_score = dict()
-        search_result = query(test_data_query, u_id)
+        search_result = query(test_data_query, u_id, ibm_credentials_url)
         for i in search_result:
             doc_ids.append(search_result[i]["ID"])
         for doc in doc_ids:

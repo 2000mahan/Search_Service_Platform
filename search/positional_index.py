@@ -4,12 +4,18 @@ from ibm_cloud import *
 import os
 from preprocess import *
 import nltk
+import requests
 
 
-def create_indices(language, u_id, bucket_name):
+def create_indices(language, u_id, bucket_name, ibm_credentials_url):
+    response = requests.get(ibm_credentials_url)
+    open("credentials.json", "wb").write(response.content)
+    with open("credentials.json", "r") as read_file:
+        credentials = json.load(read_file)
+
     try:
         file_name = language + u_id + "data.json"
-        data = get_file(file_name)
+        data = get_file(file_name, credentials)
         data = load_dict(data)
 
     except Exception as e:
@@ -95,18 +101,23 @@ def create_indices(language, u_id, bucket_name):
         for i in names:
             file_name = i + language + u_id + ".json"
             if i == "positional_index":
-                file_content = json.dumps(positional_index).encode('utf-8')
+                with open(file_name, "w") as write_file:
+                    json.dump(positional_index, write_file)
             elif i == "doc_id_title":
-                file_content = json.dumps(doc_id_title).encode('utf-8')
+                with open(file_name, "w") as write_file:
+                    json.dump(doc_id_title, write_file)
             elif i == "doc_id_url":
-                file_content = json.dumps(doc_id_url).encode('utf-8')
+                with open(file_name, "w") as write_file:
+                    json.dump(doc_id_url, write_file)
             elif i == "term_frq":
-                file_content = json.dumps(term_frq).encode('utf-8')
+                with open(file_name, "w") as write_file:
+                    json.dump(term_frq, write_file)
             elif i == "term_frq_per_doc":
-                file_content = json.dumps(term_frq_per_doc).encode('utf-8')
+                with open(file_name, "w") as write_file:
+                    json.dump(term_frq_per_doc, write_file)
             else:
-                file_content = json.dumps(doc_id_content).encode('utf-8')
+                with open(file_name, "w") as write_file:
+                    json.dump(doc_id_content, write_file)
 
-            create_file(bucket_name, file_name, file_content)
     except Exception as e:
         log_error("Main Program Error: {0}".format(e))
