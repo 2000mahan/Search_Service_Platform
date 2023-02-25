@@ -43,13 +43,13 @@ def create_indices(language, u_id, bucket_name, ibm_credentials_url):
         content = data[row]['content']
         doc_id_content[doc_id] = content
         if language == "Persian":
-            parser_persian(content)
+            content = parser_persian(content)
             terms = word_tokenize(content)
             remove_stop_words_persian(terms)
             terms = stemmer_and_lemmatizer_persian(terms)
             final_terms = terms
         elif language == "English":
-            parser_english(content)
+            content = parser_english(content)
             terms = word_tokenize(content)
             remove_stop_words_english(terms)
             terms = stemmer_english(terms)

@@ -46,6 +46,7 @@ def parser_persian(input):
 
     for char_c in english_chars_c:
         input = input.replace(char_c, '')
+    return input
 
 
 def remove_stop_words_persian(my_list):
@@ -83,6 +84,8 @@ def parser_english(input):
 
     for esc in escape:
         input = input.replace(esc, '')
+
+    return input
 
 
 def remove_stop_words_english(my_list):

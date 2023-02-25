@@ -72,17 +72,12 @@ def query(input_query, u_id, ibm_credentials_url):
 
     query = input_query
     if language == "English":
-        parser_english(query)
+        query = parser_english(query)
     else:
-        parser_persian(query)
+        query = parser_persian(query)
 
     query_list = query.split()
-    data = download_dataset(u_id, ibm_credentials_url)
-    count = 0
 
-    for word in query_list:
-        query_list[count] = spell_detection(word, positional_index, term_frq, data)
-        count = count + 1
     query_dict = dict()
     for query_word in query_list:
         query_dict[query_word] = list()
@@ -90,6 +85,8 @@ def query(input_query, u_id, ibm_credentials_url):
             convert_query_word = query_word.replace("*", ".+")
             for dictionary_term in positional_index.keys():
                 if re.search(convert_query_word, dictionary_term):
+                    print(dictionary_term)
+                    print(convert_query_word)
                     query_dict[query_word].append(dictionary_term)
             if len(query_dict[query_word]) == 0:
                 query_dict[query_word].append(query_word.replace("*", ""))
@@ -116,6 +113,7 @@ def query(input_query, u_id, ibm_credentials_url):
     for key in query_dict:
         query_list.append(query_dict[key][index_to_choose[counter]])
         counter = counter + 1
+
     if language == "English":
         remove_stop_words_english(query_list)
     else:
@@ -126,6 +124,12 @@ def query(input_query, u_id, ibm_credentials_url):
         query_list = stemmer_english(q_l)
     else:
         query_list = stemmer_and_lemmatizer_persian(q_l)
+
+    data = download_dataset(u_id, ibm_credentials_url)
+    count = 0
+    for word in query_list:
+        query_list[count] = spell_detection(word, positional_index, term_frq, data)
+        count = count + 1
 
     counter = 0
     docs_to_retrieve_from_positional_index_approach = list()
