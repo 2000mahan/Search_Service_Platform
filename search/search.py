@@ -80,7 +80,7 @@ def create_positional_index():
     u_id = user_id(token)
     if content_type == 'application/json':
         input_query = request.json
-        create_indices(input_query["language"], u_id, input_query['bucket_name'], input_query['ibm_credentials_url'])
+        create_indices(input_query["language"], u_id, input_query['ibm_credentials_url'])
         document_lengths(input_query["language"], u_id)
         return "Successfully created positional_index"
     else:

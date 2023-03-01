@@ -7,7 +7,7 @@ import nltk
 import requests
 
 
-def create_indices(language, u_id, bucket_name, ibm_credentials_url):
+def create_indices(language, u_id, ibm_credentials_url):
     response = requests.get(ibm_credentials_url)
     open("credentials.json", "wb").write(response.content)
     with open("credentials.json", "r") as read_file:
