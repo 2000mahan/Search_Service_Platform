@@ -29,7 +29,7 @@ def NDCG_test(u_id, ibm_credentials_url):
     except Exception as e:
         log_error("Main Program Error: {0}".format(e))
 
-    for test_data_query in test_data:
+    for test_data_query in test_data.values():
         pattern = re.compile("[A-Za-z]+")
         match = re.search(pattern, test_data_query)
         if match is not None:

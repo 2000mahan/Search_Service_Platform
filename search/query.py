@@ -85,8 +85,6 @@ def query(input_query, u_id, ibm_credentials_url):
             convert_query_word = query_word.replace("*", ".+")
             for dictionary_term in positional_index.keys():
                 if re.search(convert_query_word, dictionary_term):
-                    print(dictionary_term)
-                    print(convert_query_word)
                     query_dict[query_word].append(dictionary_term)
             if len(query_dict[query_word]) == 0:
                 query_dict[query_word].append(query_word.replace("*", ""))

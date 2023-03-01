@@ -15,21 +15,11 @@
 						"key": "token",
 						"value": "1234",
 						"type": "text"
-					},
-					{
-						"key": "x-bucket_name",
-						"value": "ir-data",
-						"type": "text"
-					},
-					{
-						"key": "x-ibm_credentials_url",
-						"value": "https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download",
-						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"language\" : \"Persian\", \"bucket_name\": \"ir-data\", \"ibm_credentials_url\" : \"https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download\"}\n\n",
+					"raw": "{\"language\" : \"Persian\", \"ibm_credentials_url\" : \"https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download\"}\n\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -65,7 +55,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"language\" : \"English\", \"bucket_name\": \"ir-data\", \"ibm_credentials_url\" : \"https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download\"}\n\n",
+					"raw": "{\"language\" : \"English\", \"ibm_credentials_url\" : \"https://drive.google.com/uc?id=1luwiI-IvdkF1emXBP4N27XoyqzVA90jg&export=download\"}\n\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -73,15 +63,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/create_positional_index",
+					"raw": "http://188.121.118.196/create_positional_index",
 					"protocol": "http",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"188",
+						"121",
+						"118",
+						"196"
 					],
-					"port": "5000",
 					"path": [
 						"create_positional_index"
 					]
