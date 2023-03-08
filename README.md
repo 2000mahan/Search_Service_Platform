@@ -4,7 +4,7 @@
 **ECTSearch** is a Python Search-as-a-Service Platform.
 
 
-## API
+## APIs
 **/seach/search.py** contains APIs designed to use ECTSearch as a live service. It can create important statistics, search and test the system by sending HTTP request to it's different routes.
 
 Each route takes a post request. Search-as-a-Service-Requests.json file contains some sample requests and contains important scenarios.
