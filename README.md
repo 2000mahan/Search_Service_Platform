@@ -12,21 +12,21 @@ Each route takes a post request. Search-as-a-Service-Requests.json file contains
 These routes are as follows:
 
 Routes and options:
-- **/create_positional_index** : Load the documents from IBM Cloud Storage and creats positional index and some other important statistics.
+- **/create_positional_index** : Load the documents from IBM Cloud Storage and creates positional index and some other important statistics.
     - Headers: token : 
 	- Body: {"language" : " ", "ibm_credentials_url" : " "}
     
 	returns "Successfully created positional_index"
 
 
-- **/create_statistics** : creats a JSON file and sets the values of top_k_results and champion_lists_status variables.
+- **/create_statistics** : creates a JSON file and sets the values of top_k_results and champion_lists_status variables.
     - Headers: token : 
 	- Body: {"top_k_results" : " ","champion_lists_status" : " "}
 	
   returns "Successfully created statistics file"
 
 
-- **/create_champion_lists**: creats champion lists
+- **/create_champion_lists**: creates champion lists
     - Headers: token : 
 	- Body: {"range" : " "}
   
