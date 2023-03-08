@@ -34,7 +34,7 @@ Routes and options:
 
 
 
-- **/search** : search 
+- **/search** : used for searching
     - Headers: token : 
 	- Body: {"query" : " ", "ibm_credentials_url" : " "}
 
@@ -42,7 +42,7 @@ Routes and options:
   returns query {#number: {'Title': '', 'URL': '', 'ID': ''} Retrieval Time: - seconds
 
 
-- **/test** : load test data and tests the system with Normalized Discounted Cumulative Gain
+- **/test** : loads test data and tests the system with Normalized Discounted Cumulative Gain
     - Headers: token : 
 	- Body: {"ibm_credentials_url" : " "}
 
