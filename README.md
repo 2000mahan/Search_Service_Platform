@@ -12,7 +12,7 @@ Each route takes a post request. Search-as-a-Service-Requests.json file contains
 These routes are as follows:
 
 Routes and options:
-- **/create_positional_index** : Load the documents from IBM Cloud Storage and creates positional index and some other important statistics.
+- **/create_positional_index** : Loads the documents from IBM Cloud Storage and creates positional index and some other important statistics.
     - Headers: token : 
 	- Body: {"language" : " ", "ibm_credentials_url" : " "}
     
